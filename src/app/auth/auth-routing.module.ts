@@ -7,14 +7,11 @@ import { RegisterComponent } from "./pages/register/register.component";
 const routes: Routes = [
     {
         path: '',
+        component: MainComponent,
         children: [
             {
                 path: 'login',
                 component: LoginComponent
-            },
-            {
-                path: 'main',
-                component: MainComponent
             },
             {
                 path: 'register',
