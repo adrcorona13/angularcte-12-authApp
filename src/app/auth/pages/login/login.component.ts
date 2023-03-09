@@ -21,7 +21,7 @@ export class LoginComponent {
               private authService: AuthService) { }
 
   login(){
-    console.log(this.formulario.value);
+    
     const { email, password } = this.formulario.value;
     this.authService.login(email,password)
       .subscribe((valid) => {      
@@ -32,5 +32,6 @@ export class LoginComponent {
 
         }
       })
+    
   }
 }
