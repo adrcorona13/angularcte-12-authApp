@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -23,12 +24,12 @@ export class LoginComponent {
     console.log(this.formulario.value);
     const { email, password } = this.formulario.value;
     this.authService.login(email,password)
-      .subscribe((valid) => {
-        if(valid){
+      .subscribe((valid) => {      
+        if(valid === true){
           this.router.navigateByUrl('/dashboard');
         }else{
-          console.log('error');
-          
+          Swal.fire('Error', valid, 'error');
+
         }
       })
   }
