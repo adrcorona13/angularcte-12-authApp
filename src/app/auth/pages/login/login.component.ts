@@ -23,10 +23,13 @@ export class LoginComponent {
     console.log(this.formulario.value);
     const { email, password } = this.formulario.value;
     this.authService.login(email,password)
-      .subscribe((resp) => {
-        console.log(resp);
-        
+      .subscribe((valid) => {
+        if(valid){
+          this.router.navigateByUrl('/dashboard');
+        }else{
+          console.log('error');
+          
+        }
       })
-    // this.router.navigateByUrl('/dashboard');
   }
 }
