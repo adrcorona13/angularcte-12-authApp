@@ -23,36 +23,31 @@ export class AuthService {
         const body = { email, password }
         return this.http.post<AuthResponse>(url, body)
             .pipe(
-                tap((resp) => {
+                tap(resp => {
+                    console.log(resp.token);
                     localStorage.setItem('token', resp.token!);
-                    if (resp.ok) {
-                        this._usuario = {
-                            name: resp.name!,
-                            uid: resp.uid!
-                        }
-                    }
                 }),
                 map(resp => resp.ok),
                 catchError(err => of(err.error.msg))
             )
     }
 
-    validarToken(): Observable<boolean> {
+    validarToken(): Observable<boolean> {       
         const url = `${this.baseUrl}/auth/renew`;
         const headers = new HttpHeaders()
             .set('x-token', localStorage.getItem('token') || '');
         return this.http.get<AuthResponse>(url, { headers })
             .pipe(
-                map(resp => {
-                    console.log(resp.token);
-                    
+                tap(resp => {
                     localStorage.setItem('token', resp.token!);
                     this._usuario = {
                         name: resp.name!,
-                        uid: resp.uid!
+                        uid: resp.uid!,
+                        email: resp.email!
                     }
                     return resp.ok
                 }),
+                map(resp => resp.ok),
                 catchError(err => of(false))
             );  
     }
@@ -60,5 +55,20 @@ export class AuthService {
     logout(){
         localStorage.clear();
         // localStorage.removeItem('token');
+    }
+
+    crearUsuario(name: string, email: string, password: string) {
+        const url = `${this.baseUrl}/auth/new`;
+        const body = { name,  email, password }
+        return this.http.post<AuthResponse>(url, body)
+            .pipe(
+                tap(({ok, token}) => {
+                    if (ok) {
+                        localStorage.setItem('token', token!);
+                    }
+                }),
+                map(resp => resp.ok),
+                catchError(err => of(err.error.msg))
+            )
     }
 }
